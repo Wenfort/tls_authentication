@@ -4,7 +4,7 @@ import ssl
 from tls_authenticate_app.logic.API_settings import CERTIFICATE_DATA, PRIVATE_KEY_DATA
 
 
-def prepare_ssl_context(temporary_directory):
+def prepare_tls_context(temporary_directory):
     """
     context - данные о сертификате и ключе, которые будут использоваться для авторизации.
     """

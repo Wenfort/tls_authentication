@@ -1,5 +1,5 @@
 import json
-from .ssl_logic import prepare_ssl_context
+from .ssl_logic import prepare_tls_context
 from .API_settings import API_HOST, API_ENDPOINT
 import http.client
 import tempfile
@@ -12,10 +12,10 @@ def get_external_api_data(request):
     return api_data
 
 
-def send_api_request(POST):
+def send_api_request(POST_data):
     api_connection = establish_api_connection()
-    validated_method_params = validate_method_params(POST['method_params'])
-    json_rpc = json.dumps({"jsonrpc": "2.0", "method": POST['method_name'], "params": validated_method_params, 'id': 1})
+    validated_method_params = validate_method_params(POST_data['method_params'])
+    json_rpc = json.dumps({"jsonrpc": "2.0", "method": POST_data['method_name'], "params": validated_method_params, 'id': 1})
     api_connection.request(method="POST", body=json_rpc, headers={'Content-Type': 'application/json'}, url=API_ENDPOINT)
     return api_connection
 
@@ -26,8 +26,8 @@ def establish_api_connection():
     Возвращает подключение к api сервису. Временные файлы удаляются контекстным менеджером.
     """
     with tempfile.TemporaryDirectory() as temporary_directory:
-        tsl_context = prepare_ssl_context(temporary_directory)
-        connection = http.client.HTTPSConnection(API_HOST, port=443, context=tsl_context)
+        tls_context = prepare_tls_context(temporary_directory)
+        connection = http.client.HTTPSConnection(API_HOST, port=443, context=tls_context)
         return connection
 
 
