@@ -21,9 +21,13 @@ def send_api_request(POST):
 
 
 def establish_api_connection():
-    with tempfile.TemporaryDirectory() as tmp:
-        ssl_context = prepare_ssl_context(tmp)
-        connection = http.client.HTTPSConnection(API_HOST, port=443, context=ssl_context)
+    """
+    Функция создает во временной папке сертификат и ключ. Данные для них указаны в настройках (API_settings.py).
+    Возвращает подключение к api сервису. Временные файлы удаляются контекстным менеджером.
+    """
+    with tempfile.TemporaryDirectory() as temporary_directory:
+        tsl_context = prepare_ssl_context(temporary_directory)
+        connection = http.client.HTTPSConnection(API_HOST, port=443, context=tsl_context)
         return connection
 
 
